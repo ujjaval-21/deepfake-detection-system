@@ -1,0 +1,403 @@
+/* =========================================
+   GLOBAL BASE
+========================================= */
+
+*,
+*::before,
+*::after{
+    box-sizing: border-box;
+}
+
+body{
+    margin:0;
+    font-family: "Segoe UI", sans-serif;
+    background: radial-gradient(circle at top, #0b1b3a, #040817);
+    color:#ffffff;
+}
+
+
+/* =========================================
+   NAVBAR
+========================================= */
+
+.navbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 30px;
+    background:#0b1020;
+}
+
+.logo{
+    font-size:20px;
+    font-weight:600;
+    color:#4ef1c7;
+}
+
+.nav-links a{
+    color:white;
+    text-decoration:none;
+    margin-left:15px;
+    font-size:14px;
+    padding:8px 14px;
+    border-radius:6px;
+}
+
+.nav-links a.active{
+    background:#1ccfc9;
+    color:black;
+}
+
+
+/* =========================================
+   COMMON BUTTON
+========================================= */
+
+.btn{
+    width:100%;
+    padding:12px;
+    background:#4ef1c7;
+    color:black;
+    border:none;
+    border-radius:8px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+
+/* =========================================
+   LOGIN & SIGNUP PAGE
+========================================= */
+
+.auth-page{
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.auth-card{
+    width: 100%;
+    max-width: 380px;
+    padding: 32px 28px;
+    border-radius: 14px;
+
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(8px);
+
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 10px 35px rgba(0,0,0,0.35);
+
+    text-align: center;
+}
+
+/* Title */
+.auth-card h2{
+    margin-bottom: 20px;
+    color: #4ef1c7;
+    letter-spacing: 1px;
+}
+
+/* Inputs */
+.auth-card input{
+    display: block;
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+
+    border-radius: 8px;
+    border: none;
+    outline: none;
+
+    font-size: 14px;
+}
+
+/* Button */
+.auth-card button{
+    width: 70%;
+    padding: 10px 0;
+    margin: 6px auto 0 auto;
+
+    display: block;
+
+    background: #4ef1c7;
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
+/* Hover effect */
+.auth-card button:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(78,241,199,0.35);
+    background: #38e2b7;
+}
+
+/* Bottom text */
+.auth-card p{
+    margin-top: 14px;
+    font-size: 13px;
+    color: #cfd7ff;
+}
+
+/* Links */
+.auth-card a{
+    color: #4ef1c7;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.auth-card a:hover{
+    text-decoration: underline;
+}
+
+
+/* =========================================
+   HOME PAGE
+========================================= */
+
+.hero{
+    min-height: calc(100vh - 70px);   /* navbar height space */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    padding: 0 20px;
+}
+
+.hero-content{
+    max-width: 900px;
+}
+
+.hero h1{
+    font-size:38px;
+    color:#4ef1c7;
+    margin-bottom:12px;
+}
+
+.hero p{
+    color:#b7c3ff;
+    font-size:14px;
+    line-height: 1.6;
+    margin-bottom: 22px;
+}
+
+/* Get Started button */
+
+.get-started-btn{
+    display: inline-block;
+    padding: 12px 28px;
+    background:#4ef1c7;
+    color:#000;
+    text-decoration:none;
+    border-radius: 8px;
+    font-weight:600;
+    transition: 0.25s ease;
+}
+
+.get-started-btn:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(78,241,199,0.35);
+    background:#38e2b7;
+}
+
+
+/* =========================================
+   IMAGE / VIDEO / AUDIO / LINK UPLOAD PAGES
+========================================= */
+
+.upload-card{
+    margin:40px auto;
+    width:100%;
+    max-width:360px;
+    padding:30px;
+
+    background:rgba(255,255,255,0.03);
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.08);
+}
+
+.file-box{
+    border:2px dashed #4ef1c7;
+    padding:18px;
+    border-radius:8px;
+    margin-bottom:20px;
+}
+
+.file-box input{
+    width:100%;
+    color:white;
+    background: transparent;
+    border: none;
+    outline: none;
+}
+
+.helper{
+    margin-top:10px;
+    font-size:12px;
+    color:#9aa6ff;
+}
+
+
+/* =========================================
+   SELECT / CHOOSE DETECTION TYPE PAGE
+========================================= */
+
+.select-container{
+    text-align: center;
+    margin-top: 80px;
+    padding: 0 20px;
+}
+
+.options{
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+
+
+/* Card base style */
+
+.option-card{
+    width: 250px;
+    padding: 25px;
+    border-radius: 14px;
+    text-decoration: none;
+    color: white;
+
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+    position: relative;
+    overflow: hidden;
+}
+
+.option-card:hover{
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 35px rgba(0,0,0,0.45);
+}
+
+.option-card h3{
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.option-card p{
+    font-size: 13px;
+    color: #e7ecff;
+}
+
+
+/* ---------- Card color styles ---------- */
+
+/* Image Detection */
+.option-card:nth-child(1){
+    background: linear-gradient(135deg,#4ef1c7,#1fa2ff);
+}
+
+/* Video Detection */
+.option-card:nth-child(2){
+    background: linear-gradient(135deg,#8e54e9,#4776e6);
+}
+
+/* Audio Detection */
+.option-card:nth-child(3){
+    background: linear-gradient(135deg,#ff9966,#ff5e62);
+}
+
+/* Link Detection */
+.option-card:nth-child(4){
+    background: linear-gradient(135deg,#00c6ff,#0072ff);
+}
+
+
+/* =========================================
+   RESULT PAGE
+========================================= */
+
+.result-container{
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 0 20px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.preview-img,
+.preview-video{
+    max-width: 100%;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.confidence-box{
+    width: 100%;
+    height: 20px;
+    background: #1c2340;
+    border-radius: 10px;
+    margin: 10px 0;
+    overflow: hidden;
+}
+
+.confidence-fill{
+    height: 100%;
+    background: linear-gradient(to right, #ff4d4d, #ffc107, #4ef1c7);
+    border-radius: 10px;
+}
+
+/* ---------- DETECTION PAGES LAYOUT (image / video / audio / link) ---------- */
+
+.detect-page{
+    min-height: calc(100vh - 60px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.detect-wrapper{
+    width: 100%;
+    max-width: 1200px;
+    padding: 40px 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+}
+
+/* Left text area */
+.detect-left{
+    flex: 1;
+}
+
+.detect-left h1{
+    font-size: 36px;
+    color: #4ef1c7;
+    margin-bottom: 12px;
+}
+
+.detect-left p{
+    font-size: 14px;
+    color: #b7c3ff;
+    max-width: 520px;
+}
+
+/* Right upload card */
+.detect-right{
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* keep your existing upload-card */
+.detect-right .upload-card{
+    margin: 0;
+}

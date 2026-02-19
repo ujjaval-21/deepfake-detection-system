@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="navbar">
+    <div class="logo">FAKE DETECT</div>
+    <div class="nav-links">
+        <a href="/image" class="active">Image Detect</a>
+        <a href="/video">Video Detect</a>
+        <a href="/audio">Audio Detect</a>
+        <a href="/link">Link Detect</a>
+        <a href="/logout">Logout</a>  
+    </div>
+</div>
+
+<div class="detect-page">
+    <div class="detect-wrapper">
+        <div class="detect-left">
+            <h1>Detect DeepFake Image</h1>
+            <p>Upload your image for AI-powered analysis to detect potential manipulation.</p>
+        </div>
+        <div class="detect-right">
+            <div class="upload-card">
+                <form method="POST" action="/detect-image" enctype="multipart/form-data">
+                    <div class="file-box">
+                        <input type="file" name="image" required>
+                    </div>
+                    <button class="btn" type="submit">Detect</button>
+                    <div class="helper">
+                        Supported formats: JPG, PNG
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

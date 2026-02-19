@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select Detection Type</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <h2 class="logo">FAKE DETECT</h2>
+        <a href="/" class="nav-link">Home</a>
+    </nav>
+
+    <!-- Selection Container -->
+    <div class="select-container">
+
+        <h1 class="main-title">Choose Detection Type</h1>
+
+        <div class="options">
+
+            <a href="/image" class="option-card">
+                <h3>Image Detection</h3>
+                <p>Upload an image to check if it is real or deepfake.</p>
+            </a>
+
+            <a href="/video" class="option-card">
+                <h3>Video Detection</h3>
+                <p>Upload a video and analyze frame-by-frame.</p>
+            </a>
+
+            <a href="/audio" class="option-card">
+                <h3>Audio Detection</h3>
+                <p>Upload an audio file to detect AI-generated voice.</p>
+            </a>
+
+            <a href="/link" class="option-card">
+                <h3>Link Detection</h3>
+                <p>Paste a video URL and detect deepfake.</p>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

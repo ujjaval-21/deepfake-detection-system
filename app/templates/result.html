@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Detection Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="result-container">
+
+    <h2>Detection Result</h2>
+
+    {% if filetype == "image" %}
+        <img src="{{ url_for('static', filename='uploads/' + filename) }}" class="preview-img">
+    {% elif filetype == "video" %}
+        <video controls class="preview-video">
+            <source src="{{ url_for('static', filename='uploads/' + filename) }}">
+        </video>
+    {% elif filetype == "audio" %}
+        <audio controls>
+            <source src="{{ url_for('static', filename='uploads/' + filename) }}">
+        </audio>
+    {% endif %}
+
+    <p><b>Status:</b> {{ result }}</p>
+
+    <div class="confidence-box">
+        <div class="confidence-fill" id="confidenceFill" data-confidence="{{ prob }}"></div>
+    </div>
+
+    <p><b>Confidence:</b> {{ prob }}</p>
+
+    {% if metadata %}
+    <h3>Metadata Analysis</h3>
+    <ul>
+        <li>Has EXIF: {{ metadata.has_exif }}</li>
+        <li>Camera Make: {{ metadata.camera_make }}</li>
+        <li>Camera Model: {{ metadata.camera_model }}</li>
+    </ul>
+    {% endif %}
+
+    <a href="/select">← Back</a>
+
+</body>
+<script>
+    const bar = document.getElementById("confidenceFill");
+    const value = bar.getAttribute("data-confidence");
+    bar.style.width = value;
+</script>
+</html>
