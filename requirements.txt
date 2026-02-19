@@ -1,0 +1,14 @@
+Flask
+Werkzeug
+
+opencv-python
+Pillow
+numpy
+
+librosa
+soundfile
+
+requests
+beautifulsoup4
+
+hachoir
