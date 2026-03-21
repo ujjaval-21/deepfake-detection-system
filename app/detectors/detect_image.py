@@ -1,30 +1,32 @@
-import os
-import cv2
-from detectors.metadata_analyzer import extract_image_metadata
+from transformers import ViTImageProcessor, ViTForImageClassification
+from PIL import Image
+import torch
 
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+# Load model once
+model_path = "models/image_model"
+
+processor = ViTImageProcessor.from_pretrained(model_path)
+model = ViTForImageClassification.from_pretrained(model_path)
+
+model.eval()
+
+labels = ["real", "fake"]
 
 def analyze_image(image_path):
-    image = cv2.imread(image_path)
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    image = Image.open(image_path).convert("RGB")
 
-    texture_score = gray.var()
+    inputs = processor(images=image, return_tensors="pt")
 
-    metadata = extract_image_metadata(image_path)
+    with torch.no_grad():
+        outputs = model(**inputs)
 
-    metadata_warning = False
-    if not metadata['has_exif']:
-        metadata_warning = True
+    logits = outputs.logits
+    probs = torch.softmax(logits, dim=1)
 
-    # Combine metadata + texture logic
-    if texture_score < 200 or metadata_warning:
-        detection_result = "Likely Deepfake"
-        confidence_score = "82%"
-    elif texture_score < 600:
-        detection_result = "Uncertain"
-        confidence_score = "55%"
-    else:
-        detection_result = "Likely Real"
-        confidence_score = "88%"
+    confidence = probs.max().item() * 100
+    pred = torch.argmax(probs, dim=1).item()
 
-    return detection_result, confidence_score, metadata
+    label = labels[pred]
+
+    return label, f"{confidence:.2f}%", None
+    

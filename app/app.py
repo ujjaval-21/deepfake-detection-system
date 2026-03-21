@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 import validators
 import requests
 import yt_dlp
+import uuid
 
 # Import detection modules
 from detectors.detect_image import analyze_image
@@ -12,15 +13,30 @@ from detectors.detect_video import analyze_video
 from detectors.detect_link import analyze_link
 from detectors.detect_audio import analyze_audio
 
+from flask import send_from_directory
+
+
 app = Flask(__name__)
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+@app.route('/uploads/<filename>')
+def serve_uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+
+# FILE TYPE CONFIG
+IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+VIDEO_EXTENSIONS = {'mp4', 'avi', 'mov'}
+AUDIO_EXTENSIONS = {'mp3', 'wav'}
+
+def allowed_file(filename, allowed_extensions):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
 
 # NAVIGATION ROUTES
@@ -76,45 +92,57 @@ def login():
 
 @app.route('/detect-image', methods=['POST'])
 def detect_image():
-    file = request.files['image']
 
-    filename = secure_filename(file.filename)
+    file = request.files.get('image')
+
+    if not file or file.filename == "":
+        return "No file uploaded"
+
+    if not allowed_file(file.filename, IMAGE_EXTENSIONS):
+        return "❌ Only Image files (JPG, PNG) allowed!"
+
+    filename = str(uuid.uuid4()) + "_" + secure_filename(file.filename)
     image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
-    with open(image_path, "wb") as f:
-        shutil.copyfileobj(file.stream, f)
+    file.save(image_path)
 
-    detection_result, confidence_score, metadata = analyze_image(image_path)
+    label, confidence, metadata = analyze_image(image_path)
 
     return render_template(
-        'result.html',
-        result=detection_result,
-        prob=confidence_score,
-        metadata=metadata,
-        filename=filename,
-        filetype="image"
-    )
+    'result.html',
+    result=label,
+    prob=confidence,
+    metadata=metadata,
+    filename=filename,
+    filetype="image"
+)
 
 # VIDEO DETECTION ROUTE
 
 @app.route('/detect-video', methods=['POST'])
 def detect_video():
-    file = request.files['video']
 
-    filename = secure_filename(file.filename)
+    file = request.files.get('video')
+
+    if not file or file.filename == "":
+        return "No file uploaded"
+
+    if not allowed_file(file.filename, VIDEO_EXTENSIONS):
+        return "❌ Only Video files (MP4, AVI, MOV) allowed!"
+
+    filename = str(uuid.uuid4()) + "_" + secure_filename(file.filename)
     video_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
-    with open(video_path, "wb") as f:
-        shutil.copyfileobj(file.stream, f)
+    file.save(video_path)
 
     confidence, metadata = analyze_video(video_path)
-    detection_result = "Likely Deepfake" if confidence > 50 else "Likely Real"
+
+    result = "Likely Deepfake" if confidence > 50 else "Likely Real"
 
     return render_template(
         'result.html',
-        result=detection_result,
+        result=result,
         prob=f"{int(confidence)}%",
-        metadata=metadata,
         filename=filename,
         filetype="video"
     )
@@ -124,20 +152,26 @@ def detect_video():
 
 @app.route('/detect-audio', methods=['POST'])
 def detect_audio():
-    file = request.files['audio']
 
-    filename = secure_filename(file.filename)
+    file = request.files.get('audio')
+
+    if not file or file.filename == "":
+        return "No file uploaded"
+
+    if not allowed_file(file.filename, AUDIO_EXTENSIONS):
+        return "❌ Only Audio files (MP3, WAV) allowed!"
+
+    filename = str(uuid.uuid4()) + "_" + secure_filename(file.filename)
     audio_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
-    with open(audio_path, "wb") as f:
-        shutil.copyfileobj(file.stream, f)
+    file.save(audio_path)
 
-    detection_result, confidence_score = analyze_audio(audio_path)
+    result, confidence = analyze_audio(audio_path)
 
     return render_template(
         'result.html',
-        result=detection_result,
-        prob=confidence_score,
+        result=result,
+        prob=confidence,
         filename=filename,
         filetype="audio"
     )
@@ -236,7 +270,9 @@ def detect_link():
 
         # ---------- Detect type ----------
         if 'image' in content_type:
-            result, prob, metadata = analyze_image(file_path)
+            result = analyze_image(file_path)
+            prob = "N/A"
+            metadata = None
             filetype = "image"
 
         elif 'audio' in content_type:

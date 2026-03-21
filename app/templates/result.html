@@ -9,7 +9,7 @@
     <h2>Detection Result</h2>
 
     {% if filetype == "image" %}
-        <img src="{{ url_for('static', filename='uploads/' + filename) }}" class="preview-img">
+        <img src="{{ url_for('serve_uploaded_file', filename=filename) }}" class="preview-img">
     {% elif filetype == "video" %}
         <video controls class="preview-video">
             <source src="{{ url_for('static', filename='uploads/' + filename) }}">
@@ -20,13 +20,13 @@
         </audio>
     {% endif %}
 
-    <p><b>Status:</b> {{ result }}</p>
-
     <div class="confidence-box">
         <div class="confidence-fill" id="confidenceFill" data-confidence="{{ prob }}"></div>
     </div>
 
+    <p><b>Status:</b> {{ result }}</p>
     <p><b>Confidence:</b> {{ prob }}</p>
+
 
     {% if metadata %}
     <h3>Metadata Analysis</h3>
