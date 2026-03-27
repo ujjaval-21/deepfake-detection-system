@@ -10,8 +10,6 @@ import uuid
 # Import detection modules
 from detectors.detect_image import analyze_image
 from detectors.detect_video import analyze_video
-from detectors.detect_link import analyze_link
-from detectors.detect_audio import analyze_audio
 
 from flask import send_from_directory
 
@@ -33,7 +31,6 @@ def serve_uploaded_file(filename):
 # FILE TYPE CONFIG
 IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 VIDEO_EXTENSIONS = {'mp4', 'avi', 'mov'}
-AUDIO_EXTENSIONS = {'mp3', 'wav'}
 
 def allowed_file(filename, allowed_extensions):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
@@ -48,10 +45,6 @@ def image_page():
 @app.route('/video')
 def video_page():
     return render_template('video.html')
-
-@app.route('/audio')
-def audio_page():
-    return render_template('audio.html')
 
 @app.route('/link')
 def link_page():
@@ -134,48 +127,17 @@ def detect_video():
     video_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
     file.save(video_path)
-
-    confidence, metadata = analyze_video(video_path)
-
-    result = "Likely Deepfake" if confidence > 50 else "Likely Real"
+    
+    label, confidence, error = analyze_video(video_path)
 
     return render_template(
         'result.html',
-        result=result,
-        prob=f"{int(confidence)}%",
-        filename=filename,
-        filetype="video"
-    )
-
-
-#AUDIO DETECTION ROUTE
-
-@app.route('/detect-audio', methods=['POST'])
-def detect_audio():
-
-    file = request.files.get('audio')
-
-    if not file or file.filename == "":
-        return "No file uploaded"
-
-    if not allowed_file(file.filename, AUDIO_EXTENSIONS):
-        return "❌ Only Audio files (MP3, WAV) allowed!"
-
-    filename = str(uuid.uuid4()) + "_" + secure_filename(file.filename)
-    audio_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-
-    file.save(audio_path)
-
-    result, confidence = analyze_audio(audio_path)
-
-    return render_template(
-        'result.html',
-        result=result,
-        prob=confidence,
-        filename=filename,
-        filetype="audio"
-    )
-
+    result=label,          
+    prob=confidence,     
+    metadata=None,       
+    filename=filename,
+    filetype="video"
+)
 
 # LINK DETECTION ROUTE
 import validators
@@ -247,7 +209,7 @@ def detect_link():
                                    filetype="none")
 
     
-    # CASE 2: DIRECT MEDIA FILE (image/audio/video URL)
+    # CASE 2: DIRECT MEDIA FILE (image/video URL)
     try:
         extension = content_type.split('/')[-1]
         filename = f"link_file.{extension}"
@@ -275,15 +237,12 @@ def detect_link():
             metadata = None
             filetype = "image"
 
-        elif 'audio' in content_type:
-            result, prob = analyze_audio(file_path)
-            metadata = None
-            filetype = "audio"
-
         elif 'video' in content_type:
-            confidence, metadata = analyze_video(file_path)
-            result = "Likely Deepfake" if confidence > 50 else "Likely Real"
-            prob = f"{int(confidence)}%"
+            result_data = analyze_video(file_path)
+
+            result = result_data["result"]
+            prob = f"{result_data['confidence']:.2f}%"
+            metadata = result_data["metadata"]
             filetype = "video"
 
         else:

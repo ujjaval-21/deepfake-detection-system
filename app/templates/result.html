@@ -12,7 +12,8 @@
         <img src="{{ url_for('serve_uploaded_file', filename=filename) }}" class="preview-img">
     {% elif filetype == "video" %}
         <video controls class="preview-video">
-            <source src="{{ url_for('static', filename='uploads/' + filename) }}">
+            <source src="{{ url_for('serve_uploaded_file', filename=filename) }}">
+            Your browser does not support the video tag.
         </video>
     {% elif filetype == "audio" %}
         <audio controls>
@@ -26,7 +27,6 @@
 
     <p><b>Status:</b> {{ result }}</p>
     <p><b>Confidence:</b> {{ prob }}</p>
-
 
     {% if metadata %}
     <h3>Metadata Analysis</h3>
