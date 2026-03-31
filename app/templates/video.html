@@ -1,29 +1,22 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Video Detection</title>
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
 
-<div class="navbar">
-    <div class="logo">FAKE DETECT</div>
-    <div class="nav-links">
-        <a href="/image">Image Detect</a>
-        <a href="/video" class="active">Video Detect</a>
-        <a href="/logout">Logout</a>
-    </div>
-</div>
+{% block title %}Video Detection{% endblock %}
+
+{% block content %}
 
 <div class="detect-page">
     <div class="detect-wrapper">
+
         <div class="detect-left">
             <h1>Detect DeepFake Video</h1>
-            <p>Upload your video for AI-powered analysis to detect potential manipulation.</p>
+            <p>Upload your video for AI-powered analysis.</p>
         </div>
+
         <div class="detect-right">
             <div class="upload-card">
+
                 <form method="POST" action="/detect-video" enctype="multipart/form-data">
+
                     <div class="file-box">
                         <input type="file" name="video" accept=".mp4,.avi,.mov" required>
                     </div>
@@ -33,10 +26,13 @@
                     <div class="helper">
                         Supported formats: MP4, AVI, MOV
                     </div>
+
                 </form>
+
             </div>
         </div>
+
     </div>
 </div>
-</body>
-</html>
+
+{% endblock %}

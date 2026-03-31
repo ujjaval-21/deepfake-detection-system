@@ -2,13 +2,18 @@ from flask import Flask, render_template, request, redirect, url_for, send_from_
 import os
 import uuid
 from werkzeug.utils import secure_filename
-
-# Import detection modules
+from database import init_db
+from flask import session
+from werkzeug.security import generate_password_hash, check_password_hash
+from database import get_db
 from detectors.detect_image import analyze_image
 from detectors.detect_video import analyze_video
 
 
 app = Flask(__name__)
+app.secret_key = "UjjavalYadav@21"
+
+init_db()
 
 # PATH SETUP
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -36,25 +41,30 @@ def allowed_file(filename, allowed_extensions):
 def landing_page():
     return render_template('index.html')
 
+from flask import session
+
 @app.route('/select')
 def select_page():
+    if 'user' not in session:
+        return redirect(url_for('login'))
     return render_template('select.html')
 
 @app.route('/image')
 def image_page():
+    if 'user' not in session:
+        return redirect(url_for('login'))
     return render_template('image.html')
 
 @app.route('/video')
 def video_page():
+    if 'user' not in session:
+        return redirect(url_for('login'))
     return render_template('video.html')
 
-@app.route('/history')
-def history():
-    return render_template('history.html')
-
-@app.route('/signup')
-def signup():
-    return render_template('signup.html')
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('login'))
 
 # LOGIN ROUTE
 @app.route('/login', methods=['GET', 'POST'])
@@ -63,12 +73,65 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
 
-        if username == "admin" and password == "admin":
+        from database import get_db
+        conn = get_db()
+
+        user = conn.execute(
+            "SELECT * FROM users WHERE username=?",
+            (username,)
+        ).fetchone()
+
+        if user and check_password_hash(user['password'], password):
+            session['user'] = user['username']
             return redirect(url_for('select_page'))
         else:
             return render_template('login.html', error="Invalid Credentials")
 
     return render_template('login.html')
+
+
+#signup route
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        hashed_password = generate_password_hash(password)
+
+        from database import get_db
+        conn = get_db()
+
+        try:
+            conn.execute(
+                "INSERT INTO users (username, password) VALUES (?, ?)",
+                (username, hashed_password)
+            )
+            conn.commit()
+            return redirect(url_for('login'))
+
+        except:
+            return render_template('signup.html', error="Username already exists")
+
+    return render_template('signup.html')
+
+
+@app.route('/history')
+def history():
+    if 'user' not in session:
+        return redirect(url_for('login'))
+
+    conn = get_db()
+
+    rows = conn.execute(
+        "SELECT filename, result, confidence, filetype, created_at FROM history WHERE username=? ORDER BY created_at DESC",
+        (session['user'],)
+    ).fetchall()
+
+    conn.close()
+
+    return render_template('history.html', rows=rows)
+
 
 
 # IMAGE DETECTION
@@ -89,6 +152,18 @@ def detect_image():
     file.save(image_path)
 
     label, confidence, metadata = analyze_image(image_path)
+    
+    username = session.get('user')
+
+    if username:
+        conn = get_db()
+        conn.execute(
+            "INSERT INTO history (username, filename, result, confidence, filetype) VALUES (?, ?, ?, ?, ?)",
+            (username, filename, label, confidence, "image")
+        )
+        conn.commit()
+        conn.close()
+
 
     return render_template(
         'result.html',
@@ -98,6 +173,7 @@ def detect_image():
         filename=filename,
         filetype="image"
     )
+    
 
 
 # VIDEO DETECTION
@@ -121,6 +197,17 @@ def detect_video():
     converted_filename = os.path.basename(converted_path)
     video_url = url_for('serve_uploaded_file', filename=converted_filename)
 
+    username = session.get('user')
+
+    if username:
+        conn = get_db()
+        conn.execute(
+            "INSERT INTO history (username, filename, result, confidence, filetype) VALUES (?, ?, ?, ?, ?)",
+            (username, filename, label, confidence, "video")
+        )
+        conn.commit()
+        conn.close()
+
     return render_template(
         'result.html',
         result=label,
@@ -128,7 +215,8 @@ def detect_video():
         metadata=metadata,
         video_url=video_url,
         filetype="video"
-)
+    )
+
 
 # -----------------------------
 # RUN APP

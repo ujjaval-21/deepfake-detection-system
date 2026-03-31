@@ -1,21 +1,73 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>History</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body class="bg-gray-100 p-6">
-  <h1 class="text-2xl font-bold mb-4">Detection History</h1>
+{% extends "base.html" %}
 
-  <table class="bg-white w-full border">
-    <tr class="bg-gray-200">
-      <th class="p-2">File</th>
-      <th class="p-2">Result</th>
-    </tr>
-    <tr>
-      <td class="p-2">video1.mp4</td>
-      <td class="p-2 text-red-600">Likely Deepfake</td>
-    </tr>
-  </table>
-</body>
-</html>
+{% block title %}History{% endblock %}
+
+{% block content %}
+
+<div class="history-container">
+
+    <h1 class="history-title">Detection History</h1>
+
+    {% if rows|length == 0 %}
+        <p class="no-history">No history found</p>
+    {% else %}
+
+    <div class="history-table">
+
+        <!-- HEADER -->
+        <div class="history-header">
+            <div>Preview</div>
+            <div>File Name</div>
+            <div>Result</div>
+            <div>Confidence</div>
+            <div>Type</div>
+            <div>Date</div>
+        </div>
+
+        {% for row in rows %}
+        <div class="history-row">
+
+            <!-- PREVIEW -->
+            <div>
+                {% if row['filetype'] == 'image' %}
+                    <img src="/uploads/{{ row['filename'] }}" class="preview">
+                {% else %}
+                    <video src="/uploads/{{ row['filename'] }}" class="preview" muted></video>
+                {% endif %}
+            </div>
+
+            <!-- FILE NAME -->
+            <div class="filename">
+                {{ row['filename'] }}
+            </div>
+
+            <!-- RESULT -->
+            <div class="{% if row['result'] == 'Fake' %}fake{% else %}real{% endif %}">
+                {{ row['result'] }}
+            </div>
+
+            <!-- CONFIDENCE -->
+            <div>
+                {{ row['confidence'] }}%
+            </div>
+
+            <!-- TYPE -->
+            <div>
+                {{ row['filetype'] }}
+            </div>
+
+            <!-- DATE -->
+            <div>
+                {{ row['created_at'] }}
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

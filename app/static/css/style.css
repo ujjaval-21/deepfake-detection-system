@@ -24,24 +24,80 @@ body{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 30px;
+    padding: 15px 40px;
     background: #0b1020;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
+/* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.logo span {
+    background: linear-gradient(90deg, #00ffc3, #00bfff);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+/* Nav links container */
 .nav-links {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 25px;
 }
 
-.nav-links a {
-    color: white;
+/* Nav links */
+.nav-link {
+    color: #cfd7ff;
     text-decoration: none;
-    font-size: 16px;
+    font-size: 15px;
+    position: relative;
+    transition: 0.3s ease;
 }
 
-.nav-links a:hover {
+/* Hover effect */
+.nav-link:hover {
     color: #00ffc3;
+}
+
+/* Active page */
+.nav-link.active {
+    color: #00ffc3;
+    font-weight: 600;
+}
+
+/* Underline animation */
+.nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 0%;
+    height: 2px;
+    background: #00ffc3;
+    transition: 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+.nav-link.active::after {
+    width: 100%;
+}
+
+.logo img {
+    width: 40px;        
+    height: 40px;
+    border-radius: 50%; 
+    object-fit: cover; 
+    margin-right: 10px;
 }
 
 .logo {
@@ -49,29 +105,12 @@ body{
     align-items: center;
     gap: 10px;
     text-decoration: none;
-}
-
-.logo img {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;   
-    object-fit: cover;
-}
-
-.logo span {
-    background: linear-gradient(90deg, #00ffc3, #00bfff);
-
-    background-clip: text;            
-    -webkit-background-clip: text;    
-
-    color: transparent;
-    -webkit-text-fill-color: transparent;
+    color: white;
+    font-weight: bold;
 }
 
 
-/* =========================================
-   COMMON BUTTON
-========================================= */
+/*  COMMON BUTTON  */
 
 .btn{
     width:100%;
@@ -84,6 +123,28 @@ body{
     cursor:pointer;
 }
 
+/* Download result Button */
+.result-media {
+    width: 350px;
+    border-radius: 15px;
+    object-fit: cover;
+    box-shadow: 0 0 20px rgba(0,255,200,0.2);
+}
+
+.download-btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 18px;
+    background: linear-gradient(90deg, #00e6a8, #00bfff);
+    color: #000;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.download-btn:hover {
+    opacity: 0.8;
+}
 
 /* =========================================
    LOGIN & SIGNUP PAGE
@@ -229,7 +290,7 @@ body{
 
 
 /* =========================================
-   IMAGE / VIDEO / AUDIO / LINK UPLOAD PAGES
+   IMAGE / VIDEO
 ========================================= */
 
 .upload-card{
@@ -340,23 +401,29 @@ body{
 
 
 /* =========================================
-   RESULT PAGE
+   RESULT PAGE (FINAL UI)
 ========================================= */
 
 .result-container {
     max-width: 1100px;
     margin: 60px auto;
     padding: 20px;
-    font-family: Arial, sans-serif;
     text-align: center;
 }
 
+.result-container h2 {
+    color: #4ef1c7;
+    font-size: 28px;
+}
+
+/* Layout */
 .result-wrapper {
     display: flex;
     gap: 50px;
     align-items: flex-start;
     justify-content: center;
     margin-top: 40px;
+    flex-wrap: wrap;
 }
 
 /* LEFT SIDE */
@@ -372,27 +439,30 @@ body{
     text-align: left;
 }
 
-/* MEDIA */
+/* MEDIA PREVIEW */
 .preview-img,
 .preview-video {
     width: 100%;
-    max-width: 450px;
-    border-radius: 12px;
+    max-width: 420px;
+    border-radius: 14px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
 }
 
-/* RESULT BOX */
+/* RESULT CARD */
 .result-box {
-    background: #1c2a40;
-    padding: 20px;
-    border-radius: 12px;
+    background: rgba(255,255,255,0.04);
+    padding: 22px;
+    border-radius: 14px;
     margin-bottom: 20px;
+    border: 1px solid rgba(255,255,255,0.08);
 }
 
-/* METADATA BOX */
+/* METADATA CARD */
 .metadata-box {
-    background: #1c2a40;
-    padding: 20px;
-    border-radius: 12px;
+    background: rgba(255,255,255,0.04);
+    padding: 22px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.08);
 }
 
 /* METADATA LIST */
@@ -402,52 +472,159 @@ body{
 }
 
 .metadata-box li {
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+    color: #cfd7ff;
 }
 
 /* CONFIDENCE BAR */
 .confidence-box {
     width: 100%;
-    height: 20px;
+    height: 22px;
     background: #1c2340;
-    border-radius: 10px;
-    margin-top: 10px;
+    border-radius: 12px;
+    margin-top: 12px;
     overflow: hidden;
 }
 
 .confidence-fill {
     height: 100%;
     background: linear-gradient(to right, #ff4d4d, #ffc107, #4ef1c7);
-    border-radius: 10px;
+    border-radius: 12px;
+    transition: width 0.5s ease;
 }
 
-/* STATUS COLORS */
+/* RESULT COLORS */
 .real {
     color: #4ef1c7;
     font-weight: bold;
+    font-size: 18px;
 }
 
 .fake {
     color: #ff4d4d;
     font-weight: bold;
+    font-size: 18px;
 }
 
 /* BACK BUTTON */
 .back-btn {
     display: inline-block;
     margin-top: 30px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    background: rgba(78,241,199,0.1);
     color: #4ef1c7;
     text-decoration: none;
     font-weight: bold;
+    transition: 0.3s ease;
 }
 
 .back-btn:hover {
-    text-decoration: underline;
+    background: #4ef1c7;
+    color: black;
+    transform: translateY(-2px);
+}
+
+/* =========================================
+   HISTORY PAGE FIX
+========================================= */
+
+.history-table img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* If video preview */
+.history-table video {
+    width: 100px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Table styling */
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.history-table th,
+.history-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.history-table tr:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+/* =========================================
+   HISTORY GRID FIX (IMPORTANT)
+========================================= */
+
+.history-header,
+.history-row {
+    display: grid;
+    grid-template-columns: 100px 2fr 1fr 1fr 1fr 1.5fr 80px;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Header style */
+.history-header {
+    font-weight: bold;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    padding: 10px 0;
+}
+
+/* Each row */
+.history-row {
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Hover effect */
+.history-row:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+/* Preview image/video */
+.preview {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* Result colors */
+.fake {
+    color: #ff4d4d;
+    font-weight: bold;
+}
+
+.real {
+    color: #4dffb8;
+    font-weight: bold;
+}
+
+/* View button */
+.view-btn {
+    text-decoration: none;
+    font-size: 20px;
+    color: #4dffb8;
+    transition: 0.2s;
+}
+
+.view-btn:hover {
+    transform: translateX(5px);
 }
 
 
-
-/* ---------- DETECTION PAGES LAYOUT (image / video / audio / link) ---------- */
+/* ---------- DETECTION PAGES LAYOUT (image / video) ---------- */
 
 .detect-page{
     min-height: calc(100vh - 60px);
@@ -493,4 +670,85 @@ body{
 
 .detect-right .upload-card{
     margin: 0;
+}
+
+
+/* MODAL */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #0b1a2a;
+    padding: 25px;
+    border-radius: 15px;
+    width: 80%;
+    max-width: 900px;
+    position: relative;
+    box-shadow: 0 0 25px rgba(0,255,200,0.2);
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 22px;
+    cursor: pointer;
+    color: white;
+}
+
+.modal-body {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+/* LEFT */
+.modal-left {
+    flex: 1;
+    text-align: center;
+}
+
+.modal-media {
+    width: 100%;
+    max-width: 300px;
+    border-radius: 10px;
+}
+
+/* RIGHT */
+.modal-right {
+    flex: 1;
+}
+
+.modal-right h2 {
+    margin-bottom: 10px;
+}
+
+.download-btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 18px;
+    background: linear-gradient(90deg, #00e6a8, #00bfff);
+    color: #000;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+/* CLICKABLE ROW */
+.history-row {
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.history-row:hover {
+    background: rgba(0,255,200,0.08);
 }

@@ -98,13 +98,14 @@ def analyze_video(video_path):
 
     # ❌ Model not loaded
     if model is None:
-        return "Error", "0%", "Model not loaded"
+        return "Error", "0%", None, None
 
-    # ❌ File missing
     if not os.path.exists(video_path):
-        return "Error", "0%", "Video file not found"
+        return "Error", "0%", None, None
     
     converted_path = convert_to_mp4(video_path)
+    if not os.path.exists(converted_path):
+        return "Error", "0%", None, None
 
     cap = cv2.VideoCapture(converted_path)
     frames = []
@@ -123,14 +124,14 @@ def analyze_video(video_path):
 
     except Exception as e:
         cap.release()
-        return "Error", "0%", None
+        return "Error", "0%", None, None
 
     finally:
         cap.release()
 
     # ❌ No frames extracted
     if len(frames) == 0:
-        return "Error", "0%", "Empty or corrupted video"
+        return "Error", "0%", None, None
 
     # FEATURE EXTRACTION
     X_features, X_mask = prepare_single_video(frames)
@@ -143,9 +144,9 @@ def analyze_video(video_path):
         label = "Fake" if score > 0.5 else "Real"
         confidence = score if score > 0.5 else (1 - score)
 
-        metadata = extract_video_metadata(video_path)
+        metadata = extract_video_metadata(converted_path)
 
         return label, f"{confidence * 100:.2f}%", metadata, converted_path
     
     except Exception as e:
-       return "Error", "0%", None
+       return "Error", "0%", None, None
