@@ -1,4 +1,5 @@
 from transformers import ViTImageProcessor, ViTForImageClassification
+from .metadata_analyzer import extract_image_metadata
 from PIL import Image
 import torch
 
@@ -28,5 +29,7 @@ def analyze_image(image_path):
 
     label = labels[pred]
 
-    return label, f"{confidence:.2f}%", None
+    metadata = extract_image_metadata(image_path)
+
+    return label, f"{confidence:.2f}%", metadata
     

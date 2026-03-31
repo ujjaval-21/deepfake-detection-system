@@ -4,45 +4,98 @@
     <title>Detection Result</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body class="result-container">
 
     <h2>Detection Result</h2>
 
-    {% if filetype == "image" %}
-        <img src="{{ url_for('serve_uploaded_file', filename=filename) }}" class="preview-img">
-    {% elif filetype == "video" %}
-        <video controls class="preview-video">
-            <source src="{{ url_for('serve_uploaded_file', filename=filename) }}">
-            Your browser does not support the video tag.
-        </video>
-    {% elif filetype == "audio" %}
-        <audio controls>
-            <source src="{{ url_for('static', filename='uploads/' + filename) }}">
-        </audio>
-    {% endif %}
+    <div class="result-wrapper">
 
-    <div class="confidence-box">
-        <div class="confidence-fill" id="confidenceFill" data-confidence="{{ prob }}"></div>
+        <!-- LEFT SIDE -->
+        <div class="left-section">
+
+            {% if filetype == "image" %}
+                <img src="{{ url_for('serve_uploaded_file', filename=filename) }}" class="preview-img">
+            {% elif filetype == "video" %}
+                <video class="preview-video" controls>
+                    <source src="{{ video_url }}" type="video/mp4">
+                    Your browser does not support video
+                </video>
+            {% endif %}
+
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="right-section">
+
+            <!-- RESULT -->
+            <div class="result-box">
+                <p><b>Status:</b> 
+                    <span class="{{ 'fake' if result == 'Fake' else 'real' }}">
+                        {{ result }}
+                    </span>
+                </p>
+
+                <p><b>Confidence:</b> {{ prob }}</p>
+
+                <div class="confidence-box">
+                    <div class="confidence-fill" id="confidenceFill" data-confidence="{{ prob }}"></div>
+                </div>
+            </div>
+
+            <!-- METADATA -->
+            {% if metadata %}
+            <div class="metadata-box">
+                <h3>Metadata Analysis</h3>
+
+                <ul>
+
+                    <!-- IMAGE METADATA -->
+                    {% if metadata.has_exif is defined %}
+                        <li><b>Has EXIF:</b> {{ metadata.has_exif }}</li>
+                        <li><b>Camera Make:</b> {{ metadata.camera_make }}</li>
+                        <li><b>Camera Model:</b> {{ metadata.camera_model }}</li>
+                        <li><b>Date Taken:</b> {{ metadata.date_taken }}</li>
+                        <li><b>Software:</b> {{ metadata.software }}</li>
+
+                        {% if metadata.gps %}
+                        <li>
+                            <b>Location:</b>
+                            <a href="https://www.google.com/maps?q={{ metadata.gps.lat }},{{ metadata.gps.lon }}" target="_blank">
+                                View on Map
+                            </a>
+                        </li>
+                        {% else %}
+                        <li><b>Location:</b> Not Available</li>
+                        {% endif %}
+                    {% endif %}
+
+                    <!-- VIDEO METADATA -->
+                    {% if metadata.frame_width is defined %}
+                        <li><b>Width:</b> {{ metadata.frame_width }}</li>
+                        <li><b>Height:</b> {{ metadata.frame_height }}</li>
+                        <li><b>FPS:</b> {{ metadata.fps }}</li>
+                        <li><b>Total Frames:</b> {{ metadata.frame_count }}</li>
+                    {% endif %}
+
+                </ul>
+            </div>
+            {% endif %}
+
+        </div>
     </div>
 
-    <p><b>Status:</b> {{ result }}</p>
-    <p><b>Confidence:</b> {{ prob }}</p>
+    <a href="/select" class="back-btn">← Back</a>
 
-    {% if metadata %}
-    <h3>Metadata Analysis</h3>
-    <ul>
-        <li>Has EXIF: {{ metadata.has_exif }}</li>
-        <li>Camera Make: {{ metadata.camera_make }}</li>
-        <li>Camera Model: {{ metadata.camera_model }}</li>
-    </ul>
-    {% endif %}
+    <script>
+        const bar = document.getElementById("confidenceFill");
 
-    <a href="/select">← Back</a>
+        if (bar) {
+            let value = bar.getAttribute("data-confidence");
+            value = parseFloat(value.replace("%", ""));
+            bar.style.width = value + "%";
+        }
+    </script>
 
 </body>
-<script>
-    const bar = document.getElementById("confidenceFill");
-    const value = bar.getAttribute("data-confidence");
-    bar.style.width = value;
-</script>
 </html>

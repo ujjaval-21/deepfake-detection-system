@@ -10,12 +10,17 @@
 <body>
 
     <!-- Navbar -->
-    <div class="navbar">
-        <div class="logo">FAKE DETECT</div>
+     <div class="navbar">
+
+        <a href="/" class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo">
+            <span>FAKE DETECT</span>
+        </a>
 
         <div class="nav-links">
             <a href="/login">Login</a>
         </div>
+
     </div>
 
 

@@ -20,32 +20,52 @@ body{
    NAVBAR
 ========================================= */
 
-.navbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:15px 30px;
-    background:#0b1020;
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: #0b1020;
 }
 
-.logo{
-    font-size:20px;
-    font-weight:600;
-    color:#4ef1c7;
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
-.nav-links a{
-    color:white;
-    text-decoration:none;
-    margin-left:15px;
-    font-size:14px;
-    padding:8px 14px;
-    border-radius:6px;
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
 }
 
-.nav-links a.active{
-    background:#1ccfc9;
-    color:black;
+.nav-links a:hover {
+    color: #00ffc3;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.logo img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;   
+    object-fit: cover;
+}
+
+.logo span {
+    background: linear-gradient(90deg, #00ffc3, #00bfff);
+
+    background-clip: text;            
+    -webkit-background-clip: text;    
+
+    color: transparent;
+    -webkit-text-fill-color: transparent;
 }
 
 
@@ -323,35 +343,109 @@ body{
    RESULT PAGE
 ========================================= */
 
-.result-container{
-    max-width: 600px;
+.result-container {
+    max-width: 1100px;
     margin: 60px auto;
-    padding: 0 20px;
-    text-align: center;
+    padding: 20px;
     font-family: Arial, sans-serif;
+    text-align: center;
 }
 
+.result-wrapper {
+    display: flex;
+    gap: 50px;
+    align-items: flex-start;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+/* LEFT SIDE */
+.left-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+/* RIGHT SIDE */
+.right-section {
+    flex: 1;
+    text-align: left;
+}
+
+/* MEDIA */
 .preview-img,
-.preview-video{
-    max-width: 100%;
-    border-radius: 10px;
-    margin-bottom: 15px;
+.preview-video {
+    width: 100%;
+    max-width: 450px;
+    border-radius: 12px;
 }
 
-.confidence-box{
+/* RESULT BOX */
+.result-box {
+    background: #1c2a40;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+/* METADATA BOX */
+.metadata-box {
+    background: #1c2a40;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+/* METADATA LIST */
+.metadata-box ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.metadata-box li {
+    margin-bottom: 8px;
+}
+
+/* CONFIDENCE BAR */
+.confidence-box {
     width: 100%;
     height: 20px;
     background: #1c2340;
     border-radius: 10px;
-    margin: 10px 0;
+    margin-top: 10px;
     overflow: hidden;
 }
 
-.confidence-fill{
+.confidence-fill {
     height: 100%;
     background: linear-gradient(to right, #ff4d4d, #ffc107, #4ef1c7);
     border-radius: 10px;
 }
+
+/* STATUS COLORS */
+.real {
+    color: #4ef1c7;
+    font-weight: bold;
+}
+
+.fake {
+    color: #ff4d4d;
+    font-weight: bold;
+}
+
+/* BACK BUTTON */
+.back-btn {
+    display: inline-block;
+    margin-top: 30px;
+    color: #4ef1c7;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.back-btn:hover {
+    text-decoration: underline;
+}
+
+
 
 /* ---------- DETECTION PAGES LAYOUT (image / video / audio / link) ---------- */
 
@@ -397,7 +491,6 @@ body{
     justify-content: flex-end;
 }
 
-/* keep your existing upload-card */
 .detect-right .upload-card{
     margin: 0;
 }
